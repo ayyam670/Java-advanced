@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="my" tagdir="/WEB-INF/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,10 +15,21 @@
 	crossorigin="anonymous">
 </head>
 <body>
+${header["user-agent"]}
+<hr>
+쿠키 : ${cookie.JSESSIONID.value}
+<hr>
 	<div class="container-lg">
+	<my:header></my:header>
+	<my:search/>
+	
+	<div>총 게시글수 ${fn:length(list)}</div>
+	
 	<a href="http://localhost:81/board/register">등록으로 돌아가기</a>
-	<c:forEach items="${list}" var="board">
+	<c:forEach items="${list}" var="board" varStatus="status">
+		<c:if test="${status.first}"><div>목록시작</div></c:if>
 		<div class="row mt-5">
+			<div class="col">변수 인덱스값 : ${status.count}</div>
 			<div class="col">글번호 : ${board.bno}</div>
 			<div class="col">작성자 : ${board.writer}</div>
 			<div class="col"><a href="board/update?bno=${board.bno}">제목 : ${board.title}</a></div>

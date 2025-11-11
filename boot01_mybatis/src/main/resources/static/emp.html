@@ -5,33 +5,65 @@
 <title>static/emp.html</title>
 </head>
 <body>
-<h3>사원관리</h3>
-<table>
-	<thead>
-		<tr>
-			<th>사원번호</th>
-			<th>이름</th>
-			<th>email</th>
-			<th>급여</th>
-		</tr>
-	</thead>
-	<tbody id="empList">
-		<tr>
-			<td>${}</td>
-			<td>${}</td>
-			<td>${}</td>
-			<td>${}</td>
-		</tr>
-	</tbody>
-</table>
+	<h3>사원관리</h3>
+	<table>
+		<thead>
+			<tr>
+				<th>사원번호</th>
+				<th>이름</th>
+				<th>email</th>
+				<th>급여</th>
+			</tr>
+		</thead>
+		<tbody id="empList">
+			<tr>
+				<td>${employeeId}</td>
+				<td>${firstName}</td>
+				<td>${email}</td>
+				<td>${salary}</td>
+			</tr>
+		</tbody>
+	</table>
 <script>
 getList();
 
-function getList(){
+function getList() {
+	// 서버에서 emp 데이터 가져오기
 	fetch("http://localhost:81/emp")
-	.then(response => response.json())
-	.then(json => console.log(json))
-}
+		.then(response => response.json())
+		.then(data => {
+			const tbody = document.getElementById("empList");
+			tbody.innerHTML = ""; // 기존 내용 초기화
+
+			// 리스트 반복
+			data.forEach(emp => {
+				const tr = document.createElement("tr");
+				tr.innerHTML = `
+					<td>${emp.employeeId}</td>
+					<td>${(emp.firstName ?? '') + ' ' + (emp.lastName ?? '')}</td>
+					<td>${emp.email}</td>
+					<td>${emp.salary ?? '-'}</td>
+				`;
+				tbody.appendChild(tr);
+		}) // end of forEach
+	})// end of data
+} // end of getList()
+
+/* fetch(`/emp`)
+.then(response => response.json())
+.then((datas) => {
+	let list = document.querySelector("#empList");
+	for(data of datas){
+		let newTag = `<tr>
+			<td>${data.employeeId}</td>
+			<td>${data.lastName}</td>
+			<td>${data.email}</td>
+			<td>${data.salary}</td>
+			</tr>`
+	list.insertAdjacentHTML("beforeend", newTag);
+	}
+}) */
+
 </script>
 </body>
 </html>
